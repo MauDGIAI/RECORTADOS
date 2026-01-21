@@ -5,10 +5,12 @@ fluidPage(
   
   fluidRow(style = "background-color: #66CDAA; align-items: center; justify-content: center;",
            column(5,
-                  textInput("recortado", label = tags$h4(style = "font-weight: bold;", "Ubicación RECORTADOS"), value = NULL, width = '100%')
+                  fileInput("recortado", label = tags$h4(style = "font-weight: bold;", "Ubicación RECORTADOS"), 
+                            accept = ".xlsx", width = '100%', multiple = TRUE)
            ),
            column(5,
-                  textInput("cuadro", label = tags$h4(style = "font-weight: bold;", "Ubicación CUADROS"), value = NULL, width = '100%')
+                  fileInput("cuadro", label = tags$h4(style = "font-weight: bold;", "Ubicación CUADROS"), 
+                            accept = ".xlsx", width = '100%', multiple = TRUE)
            ),
            column(2, hr(),
                   actionButton("cotejo", label = tags$span(style = "font-weight: bold;", "COTEJO"), width = '100%', icon = icon("jedi"))
@@ -24,5 +26,5 @@ fluidPage(
            )
   ),
   
-  card(dataTableOutput("confronta"), height = '700px')
+  card(dataTableOutput("confronta"), height = '690px')
 )
