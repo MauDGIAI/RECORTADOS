@@ -18,11 +18,11 @@ f_confronta <- function(recortados, cuadros){
   a_cuadr <- list.files(path = cuadros)
   resultado <- NULL; confronta <- NULL
   for (i in 1:length(a_recor)) {
-    recortado <- readxl::read_excel(paste(recortados, a_recor[i], sep = "/"), sheet = "CUADRO", skip = 8,
+    recortado <- readxl::read_excel(paste(recortados, a_recor[i], sep = "\\"), sheet = "CUADRO", skip = 8,
                                     col_names = c("A","B","C","D","E","F","G","H","I","J","K")) %>% as.data.frame()
     recortado <- recortado[!is.na(recortado$C),]
     
-    cuadro <- readxl::read_excel(paste(cuadros, a_cuadr[i], sep = "/"), sheet = "CUADRO", skip = 8,
+    cuadro <- readxl::read_excel(paste(cuadros, a_cuadr[i], sep = "\\"), sheet = "CUADRO", skip = 8,
                                  col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
                                                "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
     cuadro <- cuadro[,c(1:6,12:14,17,18)] %>% as.data.frame()
@@ -51,3 +51,4 @@ f_confronta <- function(recortados, cuadros){
   }
   return(list(I = veredicto, II = confronta))
 }
+
