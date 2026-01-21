@@ -20,12 +20,18 @@ f_confronta <- function(recortados, cuadros, r_name){ # Los parámetros son vect
                                     col_names = c("A","B","C","D","E","F","G","H","I","J","K")) %>% as.data.frame()
     recortado <- recortado[!is.na(recortado$C),]
     
-    cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:Z620",
-                                 col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
-                                               "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
-    cuadro <- cuadro[,c(1:6,12:14,17,18)] %>% as.data.frame()
-    if (is.na(cuadro$E[1])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
-    cuadro <- cuadro[!is.na(cuadro$C),]
+    if (grepl("NPARTT", r_name[i]) | grepl("PobOcup", r_name[i]) | grepl("PobOcupUrbana", r_name[i])) {
+      cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:K620",
+                                   col_names = c("A","B","C","D","E","F","G","H","I","J","K")) %>% as.data.frame()
+      cuadro <- cuadro[!is.na(cuadro$C),]
+    } else {
+      cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:Z620",
+                                   col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
+                                                 "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
+      cuadro <- cuadro[,c(1:6,12:14,17,18)] %>% as.data.frame()
+      if (is.na(cuadro$E[1])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
+      cuadro <- cuadro[!is.na(cuadro$C),]
+    }
     
     dif <- f_NA(recortado, 0) == f_NA(cuadro, 0)
     aux2 <- ifelse((nrow(dif) * ncol(dif)) == sum(dif), 0, i)
