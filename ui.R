@@ -1,23 +1,19 @@
 library(shiny); library(bslib); library(DT)
 
 fluidPage(
-  hr(),
-  
-  fluidRow(style = "background-color: #66CDAA; align-items: center; justify-content: center;",
-           column(5,
-                  fileInput("recortado", label = tags$h4(style = "font-weight: bold;", "Ubicación RECORTADOS"), 
-                            accept = ".xlsx", width = '100%', multiple = TRUE)
-           ),
-           column(5,
-                  fileInput("cuadro", label = tags$h4(style = "font-weight: bold;", "Ubicación CUADROS"), 
-                            accept = ".xlsx", width = '100%', multiple = TRUE)
-           ),
-           column(2, hr(),
-                  actionButton("cotejo", label = tags$span(style = "font-weight: bold;", "COTEJO"), width = '100%', icon = icon("jedi"))
-           )
+  fluidRow(style = "background-color: #000000; align-items: center; justify-content: center;",
+    column(2),
+    column(3,
+           actionButton("RvsC", label = tags$span(style = "font-weight: bold;", "RECORTADOS vs CUADROS"), width = '100%', icon = icon("gamepad"))),
+    column(2),
+    column(3,
+           actionButton("CvsC", label = tags$span(style = "font-weight: bold;", "CUADROS vs CUADROS"), width = '100%', icon = icon("feather"))),
+    column(2)
   ),
   
-  fluidRow(style = "background-color: #F5FFFA; align-items: center; justify-content: center;",
+  uiOutput("caratula"),
+  
+  fluidRow(style = "background-color: #F5F5F5; align-items: center; justify-content: center;",
            column(2,
                   selectInput("indicador", label = tags$h5(style = "font-weight: bold;", "~ INDICADOR ~"), choices = list("-" = "-"), selected = 1)
            ),

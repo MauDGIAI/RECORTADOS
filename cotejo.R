@@ -13,19 +13,20 @@ f_NA <- function(framedata, cambio){ # Con esta función se reemplazan los NA de
   return(framedata)
 }
 
+# COTEJO DE RECORTADOS VS CUADROS
 f_confronta <- function(recortados, cuadros, r_name){ # Los parámetros son vectores ordenados
   resultado <- NULL; confronta <- NULL
   for (i in 1:length(r_name)) {
-    recortado <- readxl::read_excel(recortados[i], sheet = "CUADRO", range = "A9:K620",
+    recortado <- readxl::read_excel(recortados[i], sheet = "CUADRO", range = "A9:K620", # Caducidad de 50 años
                                     col_names = c("A","B","C","D","E","F","G","H","I","J","K")) %>% as.data.frame()
     recortado <- recortado[!is.na(recortado$C),]
     
     if (grepl("NPARTT", r_name[i]) | grepl("PobOcup", r_name[i]) | grepl("PobOcupUrbana", r_name[i])) {
-      cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:K620",
+      cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:K620", # Caducidad de 50 años
                                    col_names = c("A","B","C","D","E","F","G","H","I","J","K")) %>% as.data.frame()
       cuadro <- cuadro[!is.na(cuadro$C),]
     } else {
-      cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:Z620",
+      cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:Z620", # Caducidad de 50 años
                                    col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
                                                  "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
       cuadro <- cuadro[,c(1:6,12:14,17,18)] %>% as.data.frame()
@@ -51,6 +52,59 @@ f_confronta <- function(recortados, cuadros, r_name){ # Los parámetros son vect
     veredicto <- "La información de los archivos recortados es CORRECTA."
   } else {
     veredicto <- paste("Los siguientes indicadores presentan diferencias:", 
+                       paste(r_name[resultado != 0], collapse = " ~ "), sep = " ~ ")
+  }
+  return(list(I = veredicto, II = confronta))
+}
+
+# COTEJO DE CUADROS VS CUADROS
+f_confronta2 <- function(cuadros0, cuadros, r_name){ # Los parámetros son vectores ordenados
+  resultado <- NULL; confronta <- NULL
+  for (i in 1:length(r_name)) {
+    if (grepl("NPARTT", r_name[i]) | grepl("PobOcup", r_name[i]) | grepl("PobOcupUrbana", r_name[i])) {
+      recortado <- readxl::read_excel(cuadros0[i], sheet = "CUADRO", range = "A9:K620", # Caducidad de 50 años
+                                   col_names = c("A","B","C","D","E","F","G","H","I","J","K")) %>% as.data.frame()
+      recortado <- recortado[!is.na(recortado$C),]
+    } else {
+      recortado <- readxl::read_excel(cuadros0[i], sheet = "CUADRO", range = "A9:Z620", # Caducidad de 50 años
+                                   col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
+                                                 "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
+      recortado <- recortado[,c(1:6,12:14,17,18)] %>% as.data.frame()
+      if (is.na(recortado$E[1])) { recortado$E <- recortado$C; recortado$`F` <- recortado$D }
+      recortado <- recortado[!is.na(recortado$C),]
+    }
+    
+    if (grepl("NPARTT", r_name[i]) | grepl("PobOcup", r_name[i]) | grepl("PobOcupUrbana", r_name[i])) {
+      cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:K620", # Caducidad de 50 años
+                                   col_names = c("A","B","C","D","E","F","G","H","I","J","K")) %>% as.data.frame()
+      cuadro <- cuadro[!is.na(cuadro$C),]
+    } else {
+      cuadro <- readxl::read_excel(cuadros[i], sheet = "CUADRO", range = "A9:Z620", # Caducidad de 50 años
+                                   col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
+                                                 "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
+      cuadro <- cuadro[,c(1:6,12:14,17,18)] %>% as.data.frame()
+      if (is.na(cuadro$E[1])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
+      cuadro <- cuadro[!is.na(cuadro$C),]
+    }
+    
+    dif <- f_NA(recortado, 0) == f_NA(cuadro, 0)
+    aux2 <- ifelse((nrow(dif) * ncol(dif)) == sum(dif), 0, i)
+    
+    for (j in 1:ncol(dif)) {
+      for (k in 1:nrow(dif)) {
+        if (dif[k,j] == "TRUE") { dif[k,j] <- "." }
+      }
+    }
+    aux1 <- list(cbind(recortado, dif, cuadro)); names(aux1) <- substring(r_name[i], 1, ubi("-", r_name[i])[1] - 1)
+    
+    resultado <- c(resultado, aux2)
+    confronta <- c(confronta, aux1)
+  }
+  
+  if (sum(resultado) == 0) {
+    veredicto <- "Todos los archivos de cuadros COINCIDEN."
+  } else {
+    veredicto <- paste("Los siguientes archivos de cuadros NO coinciden:", 
                        paste(r_name[resultado != 0], collapse = " ~ "), sep = " ~ ")
   }
   return(list(I = veredicto, II = confronta))
