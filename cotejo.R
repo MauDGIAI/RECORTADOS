@@ -13,6 +13,8 @@ f_NA <- function(framedata, cambio){ # Con esta función se reemplazan los NA de
   return(framedata)
 }
 
+f_round <- function(vector){ round(vector, 9) } # Para redondear y meter al apply
+
 # COTEJO DE RECORTADOS VS CUADROS
 f_confronta <- function(recortados, cuadros, r_name){ # Los parámetros son vectores ordenados
   resultado <- NULL; confronta <- NULL
@@ -33,6 +35,9 @@ f_confronta <- function(recortados, cuadros, r_name){ # Los parámetros son vect
       if (is.na(cuadro$E[1])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
       cuadro <- cuadro[!is.na(cuadro$C),]
     }
+    
+    recortado <- cbind(recortado[,1:2], apply(recortado[,3:11], 2, f_round))
+    cuadro <- cbind(cuadro[,1:2], apply(cuadro[,3:11], 2, f_round))
     
     dif <- f_NA(recortado, 0) == f_NA(cuadro, 0)
     aux2 <- ifelse((nrow(dif) * ncol(dif)) == sum(dif), 0, i)
@@ -86,6 +91,9 @@ f_confronta2 <- function(cuadros0, cuadros, r_name){ # Los parámetros son vecto
       if (is.na(cuadro$E[1])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
       cuadro <- cuadro[!is.na(cuadro$C),]
     }
+    
+    recortado <- cbind(recortado[,1:2], apply(recortado[,3:11], 2, f_round))
+    cuadro <- cbind(cuadro[,1:2], apply(cuadro[,3:11], 2, f_round))
     
     dif <- f_NA(recortado, 0) == f_NA(cuadro, 0)
     aux2 <- ifelse((nrow(dif) * ncol(dif)) == sum(dif), 0, i)
