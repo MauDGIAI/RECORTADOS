@@ -32,7 +32,7 @@ f_confronta <- function(recortados, cuadros, r_name){ # Los parámetros son vect
                                    col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
                                                  "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
       cuadro <- cuadro[,c(1:6,12:14,17,18)] %>% as.data.frame()
-      if (is.na(cuadro$E[1])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
+      if (is.na(cuadro$E[12])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
       cuadro <- cuadro[!is.na(cuadro$C),]
     }
     
@@ -75,7 +75,7 @@ f_confronta2 <- function(cuadros0, cuadros, r_name){ # Los parámetros son vecto
                                    col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
                                                  "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
       recortado <- recortado[,c(1:6,12:14,17,18)] %>% as.data.frame()
-      if (is.na(recortado$E[1])) { recortado$E <- recortado$C; recortado$`F` <- recortado$D }
+      if (is.na(recortado$E[12])) { recortado$E <- recortado$C; recortado$`F` <- recortado$D }
       recortado <- recortado[!is.na(recortado$C),]
     }
     
@@ -88,7 +88,7 @@ f_confronta2 <- function(cuadros0, cuadros, r_name){ # Los parámetros son vecto
                                    col_names = c("A","B","C","D","E","F","x1","x2","x3","x4","x5","G","H","I","x6",
                                                  "x7","J","K","x8","x9","x10","x11","x12","x13","x14","x15"))
       cuadro <- cuadro[,c(1:6,12:14,17,18)] %>% as.data.frame()
-      if (is.na(cuadro$E[1])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
+      if (is.na(cuadro$E[12])) { cuadro$E <- cuadro$C; cuadro$`F` <- cuadro$D }
       cuadro <- cuadro[!is.na(cuadro$C),]
     }
     

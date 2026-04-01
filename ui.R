@@ -22,5 +22,5 @@ fluidPage(
            )
   ),
   
-  card(dataTableOutput("confronta"), height = '690px')
+  card(dataTableOutput("confronta"), height = '1000px')
 )
